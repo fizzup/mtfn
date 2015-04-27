@@ -30,6 +30,43 @@ const char cap_c_cedilla = sm_c_cedilla - 0x20;
 const char sm_n_tilde = 0xf1;
 const char cap_n_tilde = sm_n_tilde - 0x20;
 
+static int char_value( char c )
+{
+    switch ( c )
+    {
+        case '0':
+            return 0x01;
+        case 'A':
+            return 0x02;
+        case 'F':
+            return 0x03;
+        case 'H':
+            return 0x04;
+        case 'J':
+            return 0x05;
+        case 'K':
+            return 0x06;
+        case 'L':
+            return 0x07;
+        case 'M':
+            return 0x08;
+        case 'N':
+            return 0x09;
+        case 'P':
+            return 0x0A;
+        case 'R':
+            return 0x0B;
+        case 'S':
+            return 0x0C;
+        case 'T':
+            return 0x0D;
+        case 'X':
+            return 0x0E;
+        default:
+            return 0x00;
+    }
+}
+
 sound::sound( const string& str, bool limit_length )
 : m_name( string( padding_len, '_' ) + str + string( padding_len, '_' ) ),
   m_first( m_name.begin() + padding_len ),
@@ -38,6 +75,8 @@ sound::sound( const string& str, bool limit_length )
   m_has_alternate( false ),
   m_primary( "" ),
   m_alternate( "" ),
+  m_prim_int( 0 ),
+  m_alt_int( 0 ),
   m_length_limited( limit_length )
 {
     // Convert to upper case, remove any unexpected characters
@@ -166,6 +205,24 @@ sound::sound( const string& str, bool limit_length )
         m_alternate =
             string( m_alternate.begin(), m_alternate.begin() + stop_len );
     }
+
+    string::const_iterator j = m_primary.begin();
+    while ( j != m_primary.end() )
+    {
+        m_prim_int <<= 4;
+        m_prim_int += char_value( *j );
+
+        j++;
+    }
+
+    j = m_alternate.begin();
+    while ( j != m_alternate.end() )
+    {
+        m_alt_int <<= 4;
+        m_alt_int += char_value( *j );
+        
+        j++;
+    }
 }
 
 sound::sound( const wstring& wstr, bool limit_length )
@@ -188,7 +245,7 @@ sound::sound( const wstring& wstr, bool limit_length )
         }
     }
 
-    sound( str, limit_length );
+    *this = sound( str, limit_length );
 }
 
 bool sound::is_slavo_germanic( void )
