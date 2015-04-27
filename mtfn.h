@@ -143,7 +143,6 @@ protected:
     bool is_spanish_ll( void );
     bool is_germanic_c( void );
     bool starts_german( void );
-    bool is_scottish_mc( void );
 
     static bool is_one_of( char needle, const std::string& haystack );
     static bool is_one_of( const std::string& needle,
