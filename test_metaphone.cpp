@@ -18,6 +18,8 @@ int main ( int argc, char** argv )
         return 1;
     }
 
+    test_interface();
+
     ifstream istrm( argv[1] );
     string s;
     while ( getline( istrm, s ) )
@@ -33,8 +35,6 @@ int main ( int argc, char** argv )
             cout << s << ',' << snd.primary() << endl;
         }
     }
-
-    test_interface();
 
     return 0;
 }
@@ -96,9 +96,23 @@ static void test_interface( void )
         error << "UCS-2 plated sounds different than blotted" << endl;
     }
 
-    if ( sounds_like( L"antidisestablishmentarianism", "supercalifragilesticexpialidocious" ) )
+    if ( sounds_like( L"antidisestablishmentarianism",
+                       "supercalifragilesticexpialidocious" ) )
     {
         error << "Long words sound the same" << endl;
+        worked = false;
+    }
+
+    snd1 = "identical";
+    if ( snd1 != "identical" )
+    {
+        error << "identical does not sound like identical" << endl;
+        worked = false;
+    }
+
+    if ( snd1 != L"identical" )
+    {
+        error << "identical does not sound like identical" << endl;
         worked = false;
     }
 

@@ -238,6 +238,8 @@ bool sounds_like( const STRA& lhs, const STRB& rhs, bool limit_length = true )
     return sound( lhs, limit_length ) == sound( rhs, limit_length );
 }
 
+// This lets you compare the sound of any pair of const char* and 
+// const wchar_t* strings.
 template <typename CHARA, typename CHARB>
 bool sounds_like( const CHARA* lhs, const CHARB* rhs, bool limit_length = true )
 {

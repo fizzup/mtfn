@@ -43,17 +43,33 @@ void calling_function( void )
 
 ```
 
-Simplified, the interface on *class sound* is like this:
+If you only ever want to create sounds that are compliant with the refeence
+implementation for doubl emetaphone, the interface of *mtfn* can be simplified
+to the one below.
+
+The interface to
+*class sound* also includes an option on the type conversion constructors
+not to limit the
+length of the double metaphone representations, which means that some
+methods that would otherwise not be required, because they
+could rely on the type conversion constructors, are needed so that they
+preserve the option to have unlimited length, if that was specified in the
+constructor.
 
 ```C++
+namespace mtfn
+{
+
 class sound
 {
 public:
-    // convert an ISO-8859-1 std::string into its double metaphone sound
+    // convert an ISO-8859-1 string into its double metaphone sound
     sound( const std::string& str );
+    sound( const char* str );
 
-    // convert an UCS-2 std::wstring into its double metaphone sound
+    // convert a UCS-2 wstring into its double metaphone sound
     sound( const std::wstring& wstr );
+    sound( const wchar_t* wstr );
 
     // Copy constructor
     sound( const sound& init );
@@ -64,6 +80,9 @@ public:
     // Equality test returns true if the sounds are pronounced the same way
     bool operator ==( const sound& rhs ) const;
 
+    // Inequality operator is the logical inverse of the equality operator
+    bool operator !=( const sound* lhr ) const;
+
     // Compare the sound of an std::wstring or std::string to this sound
     bool operator ==( const std::string& rhs ) const;
     bool operator ==( const std::wstring& rhs ) const;
@@ -71,12 +90,22 @@ public:
     // Primary English pronounciation in America
     const std::string& primary( void ) const;
 
-    // Alternate English pronounciation in America; returns an empty
-    // string if sound::has_alternate() == false.
+    // Alternate English pronounciation in America; returns an empty string
+    // if sound::has_alternate() == false.
     const std::string& alternate( void ) const;
 
     // Returns true if there is an alternate pronounciation
     const bool has_alternate( void ) const;
-};
+}; // class sound
+
+// Function to allow sound comparison between std::string and std::wstring
+template <typename STRA, typename STRB>
+bool sounds_like( const STRA& lhs, const STRB& rhs );
+
+// Function to allow sound comparison between std::string and std::wstring
+template <typename CHARA, typename CHARB>
+bool sounds_like( const CHARA* lhs, const CHARB* rhs );
+
+}; // namespace mtfn
 
 ```
